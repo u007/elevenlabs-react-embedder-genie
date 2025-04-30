@@ -9,10 +9,10 @@ const Index = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 sm:text-5xl mb-4">
-              ElevenLabs AI Voice Widget Generator
+              AI Voice Widget Generator
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              Generate and embed ElevenLabs conversational AI widgets in your website
+              Generate and embed conversational AI widgets in your website
             </p>
           </div>
           
@@ -67,7 +67,7 @@ const Index = () => {
         </div>
       </div>
       <footer className="py-6 text-center text-gray-500">
-        <p>Powered by ElevenLabs Conversational AI</p>
+        <p></p>
       </footer>
     </div>
   );
