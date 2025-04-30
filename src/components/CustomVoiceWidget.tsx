@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -160,6 +159,7 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
               Voice and text assistant
             </CardDescription>
           </CardHeader>
+          
           <CardContent className="p-0">
             <div className="h-64 overflow-y-auto p-4">
               {messages.map((message) => (
