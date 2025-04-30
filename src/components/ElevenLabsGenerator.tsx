@@ -47,7 +47,6 @@ const ElevenLabsGenerator: React.FC<ElevenLabsGeneratorProps> = ({
     toast({
       title: "Code Copied",
       description: "Widget code has been copied to clipboard",
-      icon: <Check className="h-4 w-4" />,
     });
   };
 
@@ -83,7 +82,6 @@ const ElevenLabsGenerator: React.FC<ElevenLabsGeneratorProps> = ({
     toast({
       title: "Widget Preview",
       description: "ElevenLabs widget has been added to the page",
-      icon: <Mic className="h-4 w-4" />,
     });
   };
 
@@ -97,7 +95,6 @@ const ElevenLabsGenerator: React.FC<ElevenLabsGeneratorProps> = ({
     toast({
       title: "Widget Removed",
       description: "ElevenLabs widget has been removed from the page",
-      icon: <MicOff className="h-4 w-4" />,
     });
   };
 

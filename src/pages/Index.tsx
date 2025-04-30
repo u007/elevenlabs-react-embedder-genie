@@ -1,8 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import ElevenLabsGenerator from '@/components/ElevenLabsGenerator';
+import CustomVoiceWidget from '@/components/CustomVoiceWidget';
 
 const Index = () => {
+  const [showDemoWidget, setShowDemoWidget] = useState(false);
+  const [widgetTheme, setWidgetTheme] = useState<'light' | 'dark'>('light');
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-12">
@@ -18,6 +22,40 @@ const Index = () => {
           
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">
             <ElevenLabsGenerator defaultAgentId="lRF6ZNW7TFOdj7Hu7ZPa" />
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Try Our Custom Widget</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              Experience our custom voice chat widget with simulated responses. No connection to ElevenLabs needed.
+            </p>
+            
+            <div className="flex flex-wrap gap-4 mb-4">
+              <button 
+                onClick={() => setShowDemoWidget(!showDemoWidget)}
+                className={`px-4 py-2 rounded-md ${showDemoWidget 
+                  ? 'bg-red-500 hover:bg-red-600 text-white' 
+                  : 'bg-primary hover:bg-primary/90 text-white'}`}
+              >
+                {showDemoWidget ? 'Hide Demo Widget' : 'Show Demo Widget'}
+              </button>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-sm">Theme:</span>
+                <select 
+                  value={widgetTheme} 
+                  onChange={(e) => setWidgetTheme(e.target.value as 'light' | 'dark')}
+                  className="rounded-md border px-2 py-1 text-sm"
+                >
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+              The demo widget appears in the bottom right corner of the screen.
+            </div>
           </div>
           
           <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
@@ -67,8 +105,11 @@ const Index = () => {
         </div>
       </div>
       <footer className="py-6 text-center text-gray-500">
-        <p></p>
+        <p>Custom Voice Widget © {new Date().getFullYear()}</p>
       </footer>
+      
+      {/* Demo Widget */}
+      {showDemoWidget && <CustomVoiceWidget theme={widgetTheme} agentName="Demo Assistant" />}
     </div>
   );
 };
