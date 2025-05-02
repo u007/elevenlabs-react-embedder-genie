@@ -13,6 +13,7 @@ export const useVoiceWidget = (agentName: string) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMicActive, setIsMicActive] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [language, setLanguage] = useState('en-US');
   const { toast } = useToast();
 
   // Add initial welcome message
@@ -26,6 +27,24 @@ export const useVoiceWidget = (agentName: string) => {
       }
     ]);
   }, [agentName]);
+
+  // Language change effect
+  useEffect(() => {
+    if (language !== 'en-US' && messages.length > 0) {
+      // Add a message indicating language change
+      const languageName = new Intl.DisplayNames([language.split('-')[0]], { type: 'language' })
+        .of(language.split('-')[0]) || language;
+      
+      const newMessage: Message = {
+        id: Date.now(),
+        text: `Language changed to ${languageName}. How can I help you?`,
+        isUser: false,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, newMessage]);
+    }
+  }, [language]);
 
   const toggleWidget = () => {
     setIsOpen(!isOpen);
@@ -90,7 +109,7 @@ export const useVoiceWidget = (agentName: string) => {
     
     // Simulate AI response after a short delay
     setTimeout(() => {
-      const responseText = generateDemoResponse(text);
+      const responseText = generateDemoResponse(text, language);
       const responseMessage: Message = {
         id: Date.now() + 1,
         text: responseText,
@@ -102,20 +121,32 @@ export const useVoiceWidget = (agentName: string) => {
     }, 1000);
   };
 
-  // Simple demo response generator
-  const generateDemoResponse = (input: string): string => {
+  // Simple demo response generator with language support
+  const generateDemoResponse = (input: string, lang: string): string => {
     const input_lower = input.toLowerCase();
     
+    // Simple translation for demo purposes
+    const greetings: Record<string, string> = {
+      'en-US': "Hello there! How can I assist you today?",
+      'es-ES': "¡Hola! ¿Cómo puedo ayudarte hoy?",
+      'fr-FR': "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
+      'de-DE': "Hallo! Wie kann ich Ihnen heute helfen?",
+      'it-IT': "Ciao! Come posso aiutarti oggi?",
+      'ja-JP': "こんにちは！今日はどのようにお手伝いできますか？",
+      'ko-KR': "안녕하세요! 오늘 어떻게 도와드릴까요?",
+      'zh-CN': "你好！今天我能帮你什么忙？",
+    };
+    
     if (input_lower.includes('hello') || input_lower.includes('hi')) {
-      return "Hello there! How can I assist you today?";
+      return greetings[lang] || greetings['en-US'];
     } else if (input_lower.includes('help')) {
-      return "I'm here to help! What do you need assistance with?";
-    } else if (input_lower.includes('thank')) {
-      return "You're welcome! Is there anything else I can help with?";
-    } else if (input_lower.includes('bye') || input_lower.includes('goodbye')) {
-      return "Goodbye! Have a great day!";
+      return lang.startsWith('en') ? 
+        "I'm here to help! What do you need assistance with?" :
+        "I'm here to help! (in your selected language)";
     } else {
-      return "That's interesting. Can you tell me more about that?";
+      return lang.startsWith('en') ?
+        "That's interesting. Can you tell me more about that?" :
+        "That's interesting. Can you tell me more? (in your selected language)";
     }
   };
 
@@ -123,8 +154,10 @@ export const useVoiceWidget = (agentName: string) => {
     isOpen,
     isMicActive,
     messages,
+    language,
     toggleWidget,
     toggleMicrophone,
-    handleUserInput
+    handleUserInput,
+    setLanguage
   };
 };
