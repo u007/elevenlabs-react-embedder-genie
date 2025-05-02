@@ -2,7 +2,13 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mic, Phone, X } from "lucide-react";
+import { Mic, Phone, X, ChevronDown } from "lucide-react";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import WidgetHeader from './voice-widget/WidgetHeader';
 import MessagesContainer from './voice-widget/MessagesContainer';
 import MessageInput from './voice-widget/MessageInput';
@@ -12,6 +18,23 @@ interface CustomVoiceWidgetProps {
   theme?: 'light' | 'dark';
   agentName?: string;
 }
+
+interface LanguageOption {
+  code: string;
+  name: string;
+  flag: string;
+}
+
+const LANGUAGES: LanguageOption[] = [
+  { code: 'en-US', name: 'English', flag: '🇺🇸' },
+  { code: 'es-ES', name: 'Spanish', flag: '🇪🇸' },
+  { code: 'fr-FR', name: 'French', flag: '🇫🇷' },
+  { code: 'de-DE', name: 'German', flag: '🇩🇪' },
+  { code: 'it-IT', name: 'Italian', flag: '🇮🇹' },
+  { code: 'ja-JP', name: 'Japanese', flag: '🇯🇵' },
+  { code: 'ko-KR', name: 'Korean', flag: '🇰🇷' },
+  { code: 'zh-CN', name: 'Chinese', flag: '🇨🇳' },
+];
 
 const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({ 
   theme = 'light',
@@ -27,8 +50,11 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
     setLanguage
   } = useVoiceWidget(agentName);
   
-  const handleLanguageChange = (languageCode: string) => {
-    setLanguage(languageCode);
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageOption>(LANGUAGES[0]);
+
+  const handleLanguageChange = (language: LanguageOption) => {
+    setCurrentLanguage(language);
+    setLanguage(language.code);
   };
 
   return (
@@ -46,7 +72,7 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
             <MessagesContainer 
               messages={messages} 
               theme={theme}
-              onLanguageChange={handleLanguageChange}
+              onLanguageChange={setLanguage}
             />
             <MessageInput 
               onSendMessage={handleUserInput}
@@ -73,11 +99,20 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
           {/* Language selector */}
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 px-3 py-1 rounded-full border border-gray-200 bg-white text-sm">
-              <span className="text-base">🇺🇸</span>
+              <span className="text-base">{currentLanguage.flag}</span>
               <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white shadow-sm border border-gray-100">
-              {/* The language items will be the same as in MessagesContainer */}
+              {LANGUAGES.map((language) => (
+                <DropdownMenuItem
+                  key={language.code}
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleLanguageChange(language)}
+                >
+                  <span className="text-base">{language.flag}</span>
+                  <span>{language.name}</span>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
