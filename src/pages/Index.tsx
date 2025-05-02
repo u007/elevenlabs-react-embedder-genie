@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomVoiceWidget from '@/components/CustomVoiceWidget';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,13 +14,21 @@ const Index = () => {
   const [agentName, setAgentName] = useState('AI Assistant');
   const [gradientStartColor, setGradientStartColor] = useState('#f97316');
   const [gradientEndColor, setGradientEndColor] = useState('#f59e0b');
-  const [textColor, setTextColor] = useState('#ffffff');
+  const [textColor, setTextColor] = useState('');
+  const [useCustomTextColor, setUseCustomTextColor] = useState(false);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
   
+  // Update default text color when theme changes
+  useEffect(() => {
+    if (!useCustomTextColor) {
+      setTextColor(widgetTheme === 'dark' ? '#ffffff' : '#000000');
+    }
+  }, [widgetTheme, useCustomTextColor]);
+
   const embedCode = `
 <!-- Custom Voice Widget -->
-<div id="custom-voice-widget" data-theme="${widgetTheme}" data-agent-name="${agentName}" data-gradient-start="${gradientStartColor}" data-gradient-end="${gradientEndColor}" data-text-color="${textColor}"></div>
+<div id="custom-voice-widget" data-theme="${widgetTheme}" data-agent-name="${agentName}" data-gradient-start="${gradientStartColor}" data-gradient-end="${gradientEndColor}" ${useCustomTextColor ? `data-text-color="${textColor}"` : ''}></div>
 <script>
   (function() {
     // Create script element to load the widget
@@ -40,6 +48,11 @@ const Index = () => {
       description: "Widget embed code copied to clipboard",
     });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTextColor(e.target.value);
+    setUseCustomTextColor(true);
   };
 
   return (
@@ -80,7 +93,12 @@ const Index = () => {
                   <select
                     id="theme"
                     value={widgetTheme}
-                    onChange={(e) => setWidgetTheme(e.target.value as 'light' | 'dark')}
+                    onChange={(e) => {
+                      setWidgetTheme(e.target.value as 'light' | 'dark');
+                      if (!useCustomTextColor) {
+                        setTextColor(e.target.value === 'dark' ? '#ffffff' : '#000000');
+                      }
+                    }}
                     className="w-full rounded-md border border-input bg-background px-3 py-2"
                   >
                     <option value="light">Light</option>
@@ -129,19 +147,31 @@ const Index = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="text-color">Text Color</Label>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="text-color">Text Color</Label>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        setUseCustomTextColor(false);
+                        setTextColor(widgetTheme === 'dark' ? '#ffffff' : '#000000');
+                      }}
+                    >
+                      Reset to Theme Default
+                    </Button>
+                  </div>
                   <div className="flex items-center gap-2">
                     <input 
                       type="color" 
                       id="text-color" 
                       value={textColor} 
-                      onChange={(e) => setTextColor(e.target.value)}
+                      onChange={handleTextColorChange}
                       className="w-10 h-10 p-1 rounded border"
                     />
                     <Input 
                       type="text" 
                       value={textColor} 
-                      onChange={(e) => setTextColor(e.target.value)}
+                      onChange={handleTextColorChange}
                       className="flex-1"
                     />
                   </div>
@@ -230,7 +260,7 @@ const Index = () => {
           agentName={agentName} 
           gradientStartColor={gradientStartColor}
           gradientEndColor={gradientEndColor}
-          textColor={textColor}
+          textColor={useCustomTextColor ? textColor : undefined}
         />
       }
     </div>
@@ -238,4 +268,3 @@ const Index = () => {
 };
 
 export default Index;
-

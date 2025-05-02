@@ -22,6 +22,7 @@ interface CustomVoiceWidgetProps {
   agentName?: string;
   gradientStartColor?: string;
   gradientEndColor?: string;
+  textColor?: string;
 }
 
 interface LanguageOption {
@@ -46,6 +47,7 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
   agentName = 'AI Assistant',
   gradientStartColor = '#f97316',
   gradientEndColor = '#f59e0b',
+  textColor
 }) => {
   const {
     isOpen,
@@ -74,14 +76,17 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
     setEndColor(e.target.value);
   };
 
-  // Use theme-appropriate text color based on the theme prop
+  // Determine text color based on theme or custom setting
   const getTextColor = () => {
+    if (textColor) {
+      return textColor;
+    }
     return theme === 'dark' ? '#ffffff' : '#000000';
   };
 
   const buttonStyle = {
     background: `linear-gradient(to right, ${startColor}, ${endColor})`,
-    color: theme === 'dark' ? '#ffffff' : '#000000'
+    color: getTextColor()
   };
 
   return (
@@ -181,7 +186,7 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
             style={buttonStyle}
           >
             <Phone className="h-5 w-5" />
-            <span className={theme === 'dark' ? 'text-white' : 'text-gray-800'}>Start a call</span>
+            <span style={{ color: getTextColor() }}>Start a call</span>
           </Button>
           
           {/* Language selector - Fixed positioning */}
