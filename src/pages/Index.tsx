@@ -6,18 +6,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [showDemoWidget, setShowDemoWidget] = useState(false);
   const [widgetTheme, setWidgetTheme] = useState<'light' | 'dark'>('light');
   const [agentName, setAgentName] = useState('AI Assistant');
+  const [gradientStartColor, setGradientStartColor] = useState('#f97316');
+  const [gradientEndColor, setGradientEndColor] = useState('#f59e0b');
+  const [textColor, setTextColor] = useState('#ffffff');
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
   
   const embedCode = `
 <!-- Custom Voice Widget -->
-<div id="custom-voice-widget" data-theme="${widgetTheme}" data-agent-name="${agentName}"></div>
+<div id="custom-voice-widget" data-theme="${widgetTheme}" data-agent-name="${agentName}" data-gradient-start="${gradientStartColor}" data-gradient-end="${gradientEndColor}" data-text-color="${textColor}"></div>
 <script>
   (function() {
     // Create script element to load the widget
@@ -83,6 +86,65 @@ const Index = () => {
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="gradient-start">Gradient Start</Label>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="color" 
+                      id="gradient-start" 
+                      value={gradientStartColor} 
+                      onChange={(e) => setGradientStartColor(e.target.value)}
+                      className="w-10 h-10 p-1 rounded border"
+                    />
+                    <Input 
+                      type="text" 
+                      value={gradientStartColor} 
+                      onChange={(e) => setGradientStartColor(e.target.value)}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="gradient-end">Gradient End</Label>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="color" 
+                      id="gradient-end" 
+                      value={gradientEndColor} 
+                      onChange={(e) => setGradientEndColor(e.target.value)}
+                      className="w-10 h-10 p-1 rounded border"
+                    />
+                    <Input 
+                      type="text" 
+                      value={gradientEndColor} 
+                      onChange={(e) => setGradientEndColor(e.target.value)}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="text-color">Text Color</Label>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="color" 
+                      id="text-color" 
+                      value={textColor} 
+                      onChange={(e) => setTextColor(e.target.value)}
+                      className="w-10 h-10 p-1 rounded border"
+                    />
+                    <Input 
+                      type="text" 
+                      value={textColor} 
+                      onChange={(e) => setTextColor(e.target.value)}
+                      className="flex-1"
+                    />
+                  </div>
                 </div>
               </div>
               
@@ -162,9 +224,18 @@ const Index = () => {
       </footer>
       
       {/* Demo Widget */}
-      {showDemoWidget && <CustomVoiceWidget theme={widgetTheme} agentName={agentName} />}
+      {showDemoWidget && 
+        <CustomVoiceWidget 
+          theme={widgetTheme} 
+          agentName={agentName} 
+          gradientStartColor={gradientStartColor}
+          gradientEndColor={gradientEndColor}
+          textColor={textColor}
+        />
+      }
     </div>
   );
 };
 
 export default Index;
+
