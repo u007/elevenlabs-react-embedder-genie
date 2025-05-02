@@ -22,7 +22,6 @@ interface CustomVoiceWidgetProps {
   agentName?: string;
   gradientStartColor?: string;
   gradientEndColor?: string;
-  textColor?: string;
 }
 
 interface LanguageOption {
@@ -47,7 +46,6 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
   agentName = 'AI Assistant',
   gradientStartColor = '#f97316',
   gradientEndColor = '#f59e0b',
-  textColor = '#ffffff'
 }) => {
   const {
     isOpen,
@@ -62,7 +60,6 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
   const [currentLanguage, setCurrentLanguage] = useState<LanguageOption>(LANGUAGES[0]);
   const [startColor, setStartColor] = useState(gradientStartColor);
   const [endColor, setEndColor] = useState(gradientEndColor);
-  const [btnTextColor, setBtnTextColor] = useState(textColor);
 
   const handleLanguageChange = (language: LanguageOption) => {
     setCurrentLanguage(language);
@@ -77,13 +74,14 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
     setEndColor(e.target.value);
   };
 
-  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBtnTextColor(e.target.value);
+  // Use theme-appropriate text color based on the theme prop
+  const getTextColor = () => {
+    return theme === 'dark' ? '#ffffff' : '#000000';
   };
 
   const buttonStyle = {
     background: `linear-gradient(to right, ${startColor}, ${endColor})`,
-    color: btnTextColor
+    color: theme === 'dark' ? '#ffffff' : '#000000'
   };
 
   return (
@@ -113,9 +111,9 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
         </Card>
       )}
 
-      {/* Toggle Button - Updated to be more like the image */}
+      {/* Toggle Button - Updated to respect theme */}
       {!isOpen ? (
-        <div className="flex items-center gap-2 bg-white rounded-full shadow-sm p-2 pr-3">
+        <div className={`flex items-center gap-2 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-full shadow-sm p-2 pr-3`}>
           <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-300 to-amber-500"></div>
           
           {/* Color customization dropdowns */}
@@ -175,34 +173,6 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
                 </div>
               </PopoverContent>
             </Popover>
-
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-full" style={{ backgroundColor: btnTextColor }}>
-                  <span className="sr-only">Text color</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-64">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="text-color">Text Color</Label>
-                  <div className="flex gap-2">
-                    <input
-                      type="color"
-                      id="text-color"
-                      value={btnTextColor}
-                      onChange={handleTextColorChange}
-                      className="w-8 h-8"
-                    />
-                    <Input
-                      type="text"
-                      value={btnTextColor}
-                      onChange={handleTextColorChange}
-                      placeholder="#ffffff"
-                    />
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
           </div>
           
           <Button
@@ -211,20 +181,22 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
             style={buttonStyle}
           >
             <Phone className="h-5 w-5" />
-            Start a call
+            <span className={theme === 'dark' ? 'text-white' : 'text-gray-800'}>Start a call</span>
           </Button>
           
           {/* Language selector - Fixed positioning */}
           <div className="relative">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 px-3 py-1 rounded-full border border-gray-200 bg-white text-sm">
+              <DropdownMenuTrigger className={`flex items-center gap-1 px-3 py-1 rounded-full border ${
+                theme === 'dark' ? 'border-gray-600 bg-gray-700 text-white' : 'border-gray-200 bg-white text-gray-800'
+              }`}>
                 <span className="text-base">{currentLanguage.flag}</span>
-                <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
+                <ChevronDown className={`h-4 w-4 ml-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`} />
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="end"
                 side="top" 
-                className="bg-white shadow-sm border border-gray-100"
+                className={`${theme === 'dark' ? 'bg-gray-800 text-white border-gray-700' : 'bg-white border-gray-100'} shadow-sm border`}
                 sideOffset={5}
               >
                 {LANGUAGES.map((language) => (
@@ -244,7 +216,9 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
       ) : (
         <Button
           onClick={toggleWidget}
-          className={`rounded-full shadow-sm h-12 w-12 flex items-center justify-center`}
+          className={`rounded-full shadow-sm h-12 w-12 flex items-center justify-center ${
+            theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
+          }`}
         >
           <X className="h-5 w-5" />
         </Button>
@@ -254,4 +228,3 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
 };
 
 export default CustomVoiceWidget;
-
