@@ -96,25 +96,32 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
             Start a call
           </Button>
           
-          {/* Language selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1 px-3 py-1 rounded-full border border-gray-200 bg-white text-sm">
-              <span className="text-base">{currentLanguage.flag}</span>
-              <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white shadow-sm border border-gray-100">
-              {LANGUAGES.map((language) => (
-                <DropdownMenuItem
-                  key={language.code}
-                  className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => handleLanguageChange(language)}
-                >
-                  <span className="text-base">{language.flag}</span>
-                  <span>{language.name}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Language selector - Fixed positioning */}
+          <div className="relative">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 px-3 py-1 rounded-full border border-gray-200 bg-white text-sm">
+                <span className="text-base">{currentLanguage.flag}</span>
+                <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end"
+                side="top" 
+                className="bg-white shadow-sm border border-gray-100"
+                sideOffset={5}
+              >
+                {LANGUAGES.map((language) => (
+                  <DropdownMenuItem
+                    key={language.code}
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => handleLanguageChange(language)}
+                  >
+                    <span className="text-base">{language.flag}</span>
+                    <span>{language.name}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       ) : (
         <Button
