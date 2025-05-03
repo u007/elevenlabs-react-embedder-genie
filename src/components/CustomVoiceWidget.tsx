@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mic, Phone, X, ChevronDown } from "lucide-react";
@@ -62,6 +62,23 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
   const [currentLanguage, setCurrentLanguage] = useState<LanguageOption>(LANGUAGES[0]);
   const [startColor, setStartColor] = useState(gradientStartColor);
   const [endColor, setEndColor] = useState(gradientEndColor);
+  const [pulseOpacity, setPulseOpacity] = useState(1);
+
+  // Animated pulsing effect for the AI icon
+  useEffect(() => {
+    if (!isOpen) {
+      const interval = setInterval(() => {
+        setPulseOpacity(prev => {
+          // Alternate between 0.6 and 1 for a subtle "breathing" effect
+          return prev >= 1 ? 0.6 : 1;
+        });
+      }, 1500); // Change opacity every 1.5 seconds
+
+      return () => clearInterval(interval);
+    } else {
+      setPulseOpacity(1); // Reset to full opacity when widget is opened
+    }
+  }, [isOpen]);
 
   const handleLanguageChange = (language: LanguageOption) => {
     setCurrentLanguage(language);
@@ -119,7 +136,10 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
       {/* Toggle Button - Updated to respect theme */}
       {!isOpen ? (
         <div className={`flex items-center gap-2 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-full shadow-sm p-2 pr-3`}>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-300 to-amber-500"></div>
+          <div 
+            className={`w-10 h-10 rounded-full bg-gradient-to-r from-amber-300 to-amber-500 transition-opacity duration-1000`}
+            style={{ opacity: pulseOpacity }}
+          ></div>
           
           <Button
             onClick={toggleWidget}
