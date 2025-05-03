@@ -121,38 +121,6 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
         <div className={`flex items-center gap-2 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-full shadow-sm p-2 pr-3`}>
           <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-300 to-amber-500"></div>
           
-          {/* Color customization dropdowns */}
-          <div className="flex gap-2 mr-2">
-
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-full" style={{ backgroundColor: endColor }}>
-                  <span className="sr-only">End color</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-64">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="end-color">Gradient End Color</Label>
-                  <div className="flex gap-2">
-                    <input
-                      type="color"
-                      id="end-color"
-                      value={endColor}
-                      onChange={handleEndColorChange}
-                      className="w-8 h-8"
-                    />
-                    <Input
-                      type="text"
-                      value={endColor}
-                      onChange={handleEndColorChange}
-                      placeholder="#f59e0b"
-                    />
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div>
-          
           <Button
             onClick={toggleWidget}
             className={`rounded-full shadow-sm h-12 px-6 gap-2`}
