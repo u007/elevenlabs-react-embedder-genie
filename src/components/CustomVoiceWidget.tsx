@@ -123,33 +123,6 @@ const CustomVoiceWidget: React.FC<CustomVoiceWidgetProps> = ({
           
           {/* Color customization dropdowns */}
           <div className="flex gap-2 mr-2">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-full" style={{ backgroundColor: startColor }}>
-                  <span className="sr-only">Start color</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-64">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="start-color">Gradient Start Color</Label>
-                  <div className="flex gap-2">
-                    <input
-                      type="color"
-                      id="start-color"
-                      value={startColor}
-                      onChange={handleStartColorChange}
-                      className="w-8 h-8"
-                    />
-                    <Input
-                      type="text"
-                      value={startColor}
-                      onChange={handleStartColorChange}
-                      placeholder="#f97316"
-                    />
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
 
             <Popover>
               <PopoverTrigger asChild>
